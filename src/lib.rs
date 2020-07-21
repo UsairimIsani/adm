@@ -1,3 +1,5 @@
+pub mod sorted_squares;
+
 #[cfg(test)]
 mod tests {
     #[test]
