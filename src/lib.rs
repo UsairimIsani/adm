@@ -1,6 +1,7 @@
 //! # ADM - Algorithms Design Manual
 //! To Understand Algorithms in depth
 pub mod duplicate_zeroes;
+pub mod quicksort;
 pub mod single_num;
 pub mod sorted_squares;
 #[cfg(test)]
