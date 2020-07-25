@@ -1,5 +1,6 @@
 //! # ADM - Algorithms Design Manual
 //! To Understand Algorithms in depth
+pub mod binary_search;
 pub mod duplicate_zeroes;
 pub mod quicksort;
 pub mod single_num;
