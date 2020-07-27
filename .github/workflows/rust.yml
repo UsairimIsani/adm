@@ -2,21 +2,34 @@ name: Rust
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  check:
+    name: Rust ${{ matrix.rust }}
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        rust: [1.45.0, stable, beta]
     steps:
-    - uses: actions/checkout@v2
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v2
+      - name: Install minimal ${{ matrix.rust }} rust
+        uses: actions-rs/toolchain@b2417cd
+        with:
+          override: true
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+      - run: cargo -Vv && rustc -Vv
+      - run: cargo check
+      - run: cargo check --all-features
+      - run: cargo clippy -- -Dwarnings -Dclippy::dbg_macro
+        if: ${{ matrix.rust == 'stable' }}
+      - run: cargo fmt --all -- --check
+        if: ${{ matrix.rust == 'stable' }}
+      - run: cargo test
+        if: ${{ matrix.rust == 'stable' }}
