@@ -4,4 +4,4 @@
 
 This project aims to provide common implementations of Data Structures and Algorithms in C, Rust and Python.
 
-![@Usaririm](https://github.com/UsairimIsani)
+[@Usaririm](https://github.com/UsairimIsani)
