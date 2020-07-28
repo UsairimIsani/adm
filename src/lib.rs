@@ -1,6 +1,8 @@
 //! # ADM - Algorithms Design Manual
 //! To Understand Algorithms in depth
+#![doc(html_playground_url = "https://play.rust-lang.org/")]
 pub mod binary_search;
+pub mod binary_tree;
 pub mod counting_occurances;
 pub mod duplicate_zeroes;
 pub mod quicksort;

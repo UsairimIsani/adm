@@ -15,10 +15,22 @@
 ///```
 /// ### Code
 /// ```rust, run
-/// use adm::duplicate_zeroes::duplicate_zeros;
+/// # pub fn duplicate_zeros(arr: &mut Vec<i32>) {
+/// #     let mut i = 0;
+/// #     while i < arr.len() {
+/// #         if arr[i] == 0 {
+/// #             arr.insert(i + 1, 0);
+/// #             arr.pop();
+/// #             i += 2;
+/// #         } else {
+/// #             i += 1;
+/// #         }
+/// #     }
+/// # }
+///
 /// let mut arr = vec![1,0,2,3,0,4,5,0];
 /// duplicate_zeros(&mut arr);
-/// assert_eq!(vec![1,0,0,2,3,0,0,4],arr);
+/// println!("Duplicate Zeros : {:?}",arr);
 /// ```
 
 pub fn duplicate_zeros(arr: &mut Vec<i32>) {

@@ -105,3 +105,4 @@ class BinaryTree(object):
         else:
             f = self._in_order
         return f(self.root)
+# Please Comment How it works line by Line.
