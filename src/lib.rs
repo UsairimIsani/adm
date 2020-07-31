@@ -8,6 +8,7 @@ pub mod duplicate_zeroes;
 pub mod quicksort;
 pub mod single_num;
 pub mod sorted_squares;
+pub mod toptal_word;
 #[cfg(test)]
 mod tests {
     #[test]
