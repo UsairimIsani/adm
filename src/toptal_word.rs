@@ -28,7 +28,6 @@ pub fn create_string(arr: Vec<&str>) -> String {
 }
 fn create_string_r(key: &String, map: &HashMap<String, String>) -> String {
     let val = map.get(key);
-    println!("{}", val.unwrap());
     if val.is_none() {
         key.to_string()
     } else {
