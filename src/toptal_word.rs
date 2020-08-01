@@ -1,5 +1,5 @@
 //! Toptal Quiz
-use log::{debug, info, trace};
+use log::trace;
 /// # Toptal Interview Question
 ///
 /// > Given an array : ["S>P","P>A","A>I","I>N"]
@@ -28,8 +28,8 @@ pub fn create_string(arr: Vec<&str>) -> String {
         })
         .collect();
 
-    debug!("Forward Hashmap : {:?}", map_for);
-    debug!("Backward Hashmap : {:?}", map_rev);
+    trace!("Forward Hashmap : {:?}", map_for);
+    trace!("Backward Hashmap : {:?}", map_rev);
 
     format!(
         "{}{}",
@@ -55,7 +55,6 @@ mod tests {
 
     #[test]
     fn test_create_string() {
-        crate::init();
         use crate::toptal_word::create_string;
         assert_eq!("SPAIN", create_string(vec!["S>P", "P>A", "A>I", "I>N"]));
     }
