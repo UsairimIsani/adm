@@ -1,11 +1,22 @@
 //! Toptal Quiz
+use log::{debug, info, trace};
 /// # Toptal Interview Question
 ///
 /// > Given an array : ["S>P","P>A","A>I","I>N"]
+/// ## Example
+///
+/// ```
+/// use adm::toptal_word::create_string;
+/// fn main(){
+///     println!("{:#?}",create_string(vec!["S>P", "P>A", "A>I", "I>N"]));
+/// }
+///```
 use std::collections::HashMap;
+/// # Create String
 pub fn create_string(arr: Vec<&str>) -> String {
     let mut map_for = HashMap::new();
     let mut map_rev = HashMap::new();
+
     let arr: Vec<Vec<String>> = arr
         .iter()
         .map(|x: &&str| {
@@ -16,6 +27,10 @@ pub fn create_string(arr: Vec<&str>) -> String {
             sp_r
         })
         .collect();
+
+    debug!("Forward Hashmap : {:?}", map_for);
+    debug!("Backward Hashmap : {:?}", map_rev);
+
     format!(
         "{}{}",
         create_string_r(&arr[arr.len() / 2][0], &map_rev)
@@ -37,8 +52,10 @@ fn create_string_r(key: &String, map: &HashMap<String, String>) -> String {
 
 #[cfg(test)]
 mod tests {
+
     #[test]
     fn test_create_string() {
+        crate::init();
         use crate::toptal_word::create_string;
         assert_eq!("SPAIN", create_string(vec!["S>P", "P>A", "A>I", "I>N"]));
     }

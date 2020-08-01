@@ -1,6 +1,11 @@
-/// Best Solution Running time 4ms
-/// Uses a Quick Sort Approach
-pub fn sorted_squares_quick(a: Vec<i32>) -> Vec<i32> {
+//! # Sorted Squares
+/// # Sorted Square Leetcode
+///
+///
+///
+///
+///
+pub fn sorted_squares_leetcode(a: Vec<i32>) -> Vec<i32> {
     let mut forward = a.iter().peekable();
     let mut back = a.iter().rev().peekable();
     let mut res: Vec<i32> = vec![0; a.len()];
@@ -18,9 +23,25 @@ pub fn sorted_squares_quick(a: Vec<i32>) -> Vec<i32> {
     }
     res
 }
-/// My Implemented 97.69%tile - Running Time 8ms
+/// # Sorted Squares
+///
+///
+///
+///
 pub fn sorted_squares(a: Vec<i32>) -> Vec<i32> {
     let mut a: Vec<i32> = a.into_iter().map(|x| x.pow(2)).collect();
     a.sort_unstable();
     a
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_sorted_squares() {
+        // use super::sorted_squares;
+    }
+    #[test]
+    fn test_sorted_squares_leetcode() {
+        // use super::sorted_squares;
+    }
 }
