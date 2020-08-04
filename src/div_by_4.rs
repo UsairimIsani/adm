@@ -33,6 +33,6 @@ mod tests {
     #[test]
     fn is_power_of_four_4() {
         use super::*;
-        assert_eq!(false, is_power_of_four());
+        assert_eq!(false, is_power_of_four(3));
     }
 }
