@@ -10,6 +10,7 @@ pub mod binary_search;
 pub mod binary_tree;
 pub mod capital_letters;
 pub mod counting_occurances;
+pub mod div_by_4;
 pub mod duplicate_zeroes;
 pub mod find_max_consecutive_ones;
 pub mod find_numbers;
