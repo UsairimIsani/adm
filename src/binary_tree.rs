@@ -1,41 +1,50 @@
-type Branch = Option<Box<Node>>;
+use std::fmt::Debug;
+use std::mem::replace;
+type Tree<T> = Option<Box<Node<T>>>;
 #[derive(Debug)]
-struct Node {
-    val: usize,
-    left: Branch,
-    right: Branch,
-    root: Branch,
-}
-#[derive(Debug)]
-struct Tree {
-    root: Branch,
-    length: usize,
+pub struct Node<T: PartialEq + PartialOrd> {
+    val: T,
+    left: Tree<T>,
+    right: Tree<T>,
 }
 
-impl Node {
-    fn new(val: usize) -> Branch {
+impl<T: PartialEq + PartialOrd + Debug> Node<T> {
+    pub fn new(val: T) -> Tree<T> {
         Some(Box::new(Node {
             val,
             left: None,
             right: None,
-            root: None,
-        }))
-    }
-    fn add(&mut self, node: Branch) -> Branch {
-        Some(Box::new(Node {
-            val: self.val,
-            left: node,
-            right: None,
-            root: None,
         }))
     }
 }
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test_tree() {
-        let some = Node::new(4).unwrap().add(Node::new(5));
-        println!("{:?}", some);
+#[derive(Debug)]
+pub struct BinaryTree<T: PartialEq + PartialOrd + Debug> {
+    root: Tree<T>,
+    len: u64,
+}
+impl<T: PartialEq + PartialOrd + Debug> BinaryTree<T> {
+    pub fn new(val: T) -> Self {
+        BinaryTree {
+            len: 0,
+            root: Node::new(val),
+        }
+    }
+    pub fn insert(&mut self, val: T) {
+        self.len += 1;
+        let root = replace(&mut self.root, None); // Need More practise with this.
+        self.root = self.insert_r(root, val);
+    }
+    fn insert_r(&mut self, node: Tree<T>, val: T) -> Tree<T> {
+        match node {
+            Some(mut n) => {
+                if n.val <= val {
+                    n.left = self.insert_r(n.left, val);
+                } else {
+                    n.right = self.insert_r(n.right, val);
+                }
+                Some(n)
+            }
+            _ => Node::new(val),
+        }
     }
 }
