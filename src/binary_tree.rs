@@ -8,7 +8,7 @@ pub struct Node<T: PartialEq + PartialOrd> {
     right: Tree<T>,
 }
 
-impl<T: PartialEq + PartialOrd + Debug> Node<T> {
+impl<T: PartialEq + PartialOrd + Debug + Clone> Node<T> {
     pub fn new(val: T) -> Tree<T> {
         Some(Box::new(Node {
             val,
@@ -18,11 +18,11 @@ impl<T: PartialEq + PartialOrd + Debug> Node<T> {
     }
 }
 #[derive(Debug)]
-pub struct BinaryTree<T: PartialEq + PartialOrd + Debug> {
+pub struct BinaryTree<T: PartialEq + PartialOrd + Debug + Clone> {
     root: Tree<T>,
     len: u64,
 }
-impl<T: PartialEq + PartialOrd + Debug> BinaryTree<T> {
+impl<T: PartialEq + PartialOrd + Debug + Clone> BinaryTree<T> {
     pub fn new(val: T) -> Self {
         BinaryTree {
             len: 0,
@@ -45,6 +45,23 @@ impl<T: PartialEq + PartialOrd + Debug> BinaryTree<T> {
                 Some(n)
             }
             _ => Node::new(val),
+        }
+    }
+    pub fn find(&mut self, val: T) -> Option<T> {
+        self.find_r(&self.root, val)
+    }
+    fn find_r(&self, node: &Tree<T>, val: T) -> Option<T> {
+        match node {
+            Some(n) => {
+                if n.val == val {
+                    Some(n.val.clone())
+                } else if n.val <= val {
+                    self.find_r(&n.left, val)
+                } else {
+                    self.find_r(&n.right, val)
+                }
+            }
+            _ => None,
         }
     }
 }
