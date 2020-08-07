@@ -19,7 +19,7 @@ pub mod single_num;
 pub mod sorted_squares;
 pub mod toptal_word;
 pub fn init() {
-    pretty_env_logger::try_init();
+    // pretty_env_logger::try_init();
     // let _ = env_logger::builder()
     //     // Include all events in tests
     //     .filter_level(log::LevelFilter::max())
