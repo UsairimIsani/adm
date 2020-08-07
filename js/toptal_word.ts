@@ -6,14 +6,13 @@ function word(list: string[]): string {
     return e.split(">");
   });
 
-  let map_for = new Map();
-  let map_back = new Map();
+  let [map_for, map_back] = [new Map(), new Map()];
   proc_list.forEach((e) => {
     map_for.set(e[0], e[1]);
     map_back.set(e[1], e[0]);
   });
   return (
-    create_r(proc_list[Math.floor(list.length / 2)][0], map_back).split("").reverse().join("") +
+    create_r(proc_list[Math.floor(list.length / 2)][0], map_back).split("").reverse().join("") + // Create String O(n + n + n) == O(n)
     create_r(proc_list[Math.floor(list.length / 2)][1], map_for)
   );
 }
