@@ -18,3 +18,4 @@ function word(list: string[]): string {
 }
 
 console.log(word(["S>P", "P>A", "A>I", "I>N"]));
+console.log(word(["R>E", "O>R", "E>M", "L>O"]));
