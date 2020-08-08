@@ -23,3 +23,6 @@ features = ["termcolor", "atty"]
 [[bench]]
 name = "sorted_square"
 harness = false
+
+[dev-dependencies]
+proptest = "0.10.0"
