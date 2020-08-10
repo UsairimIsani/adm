@@ -26,18 +26,8 @@
 //     one = two;
 //     two = temp;
 // }
+
 use std::fmt::Debug;
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_quicksort() {
-        use crate::quicksort::quick_sort;
-        let arr = vec![3, 6, 5, 7];
-        println!("{:?}", arr);
-        let arr = quick_sort(&arr);
-        println!("{:?}", arr);
-    }
-}
 fn partition<T: PartialOrd + Clone + Debug>(
     collection: &mut [T],
     low: usize,
@@ -75,4 +65,13 @@ pub fn quick_sort<T: PartialOrd + Clone + Debug>(collection: &[T]) -> Vec<T> {
     let mut result = collection.to_vec();
     quick_sort_r(&mut result, 0, collection.len() - 1);
     result
+}
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_quicksort() {
+        use crate::quicksort::quick_sort;
+        let arr = [3, 6, 5, 7];
+        assert_eq!(vec![3, 5, 6, 7], quick_sort(&arr));
+    }
 }

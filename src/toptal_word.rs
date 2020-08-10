@@ -44,11 +44,21 @@ pub fn create_string(arr: Vec<String>) -> String {
 }
 fn create_string_r(key: &String, map: &HashMap<String, String>) -> String {
     let val = map.get(key);
+    let mut val_st = "".to_owned();
     if val.is_none() {
-        key.to_string()
+        val_st = key.to_string();
     } else {
-        format!("{}{}", key, create_string_r(val.unwrap(), map))
+        let next = map.get(val.unwrap());
+        if !next.is_none() && !val.is_none() {
+            if next.unwrap() == val.unwrap() {
+                val_st = val.unwrap().to_owned();
+            }
+        } else {
+            val_st = format!("{}{}", key, create_string_r(val.unwrap(), map));
+        }
     }
+    println!("{}", val_st);
+    val_st
 }
 #[cfg(test)]
 mod tests {
