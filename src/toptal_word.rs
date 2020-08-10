@@ -44,21 +44,11 @@ pub fn create_string(arr: Vec<String>) -> String {
 }
 fn create_string_r(key: &String, map: &HashMap<String, String>) -> String {
     let val = map.get(key);
-    let mut val_st = "".to_owned();
     if val.is_none() {
-        val_st = key.to_string();
+        key.to_string()
     } else {
-        let next = map.get(val.unwrap());
-        if !next.is_none() && !val.is_none() {
-            if next.unwrap() == val.unwrap() {
-                val_st = val.unwrap().to_owned();
-            }
-        } else {
-            val_st = format!("{}{}", key, create_string_r(val.unwrap(), map));
-        }
+        format!("{}{}", key, create_string_r(val.unwrap(), map))
     }
-    println!("{}", val_st);
-    val_st
 }
 #[cfg(test)]
 mod tests {
@@ -73,23 +63,44 @@ mod tests {
             println!("{:#?}", create_string(st));
         }
     }
-    // #[test]
-    // fn test_create_string() {
-    //     use crate::toptal_word::create_string;
-    //     assert_eq!("SPAIN", create_string(vec!["S>P", "P>A", "A>I", "I>N"]));
-    // }
-    // #[test]
-    // fn test_create_string_lorem() {
-    //     use crate::toptal_word::create_string;
-    //     assert_eq!("LOREM", create_string(vec!["R>E", "O>R", "E>M", "L>O"]));
-    // }
-    //Edge Case when two identical Letters
+    #[test]
+    fn test_create_string() {
+        use crate::toptal_word::create_string;
+        assert_eq!(
+            "SPAIN",
+            create_string(
+                vec!["S>P", "P>A", "A>I", "I>N"]
+                    .iter()
+                    .map(|x| x.to_string())
+                    .collect::<Vec<String>>()
+            )
+        );
+    }
+    #[test]
+    fn test_create_string_lorem() {
+        use crate::toptal_word::create_string;
+        assert_eq!(
+            "LOREM",
+            create_string(
+                vec!["R>E", "O>R", "E>M", "L>O"]
+                    .iter()
+                    .map(|x| x.to_string())
+                    .collect::<Vec<String>>()
+            )
+        );
+    }
+    //Edge Case when two identical Letters. Yet to solve this problem.
     // #[test]
     // fn test_create_string_success() {
     //     use crate::toptal_word::create_string;
     //     assert_eq!(
     //         "SUCCESS",
-    //         create_string(vec!["S>U", "U>C", "C>C", "C>E", "E>S", "S>S"])
+    //         create_string(
+    //             vec!["S>U", "U>C", "C>C", "C>E", "E>S", "S>S"]
+    //                 .iter()
+    //                 .map(|x| x.to_string())
+    //                 .collect::<Vec<String>>()
+    //         )
     //     );
     // }
 }
