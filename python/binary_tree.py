@@ -68,7 +68,7 @@ class BinaryTree(object):
             temp = self.min_value_node(node.r)
             node.v = temp.v
             node.r = self._delete(node.r, temp.v)
-        return temp
+            return temp
 
     def delete(self, value):
         return self._delete(self.root, value)
