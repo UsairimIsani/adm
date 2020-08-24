@@ -6,12 +6,12 @@ using namespace std;
 
 template <typename T>
 class Node {
-   private:
+   public:
     T data;
     Node<T> *next;
-    friend class SingleLinkedList<T>;
 };
 
+// Interface
 template <typename T>
 class SingleLinkedList {
    private:
@@ -25,27 +25,29 @@ class SingleLinkedList {
     SingleLinkedList();
     int get_size() const { return size; }
     bool is_empty() const { return size == 0 ? true : false; }
-    T const &value_at(int) const;
+    T const &value_at(int);
     void push_front(const T &);
-    T &pop_front();
+    T pop_front();
     void push_back(const T &);
-    T &pop_back();
-    T const &front() const;
-    T const &back() const;
+    T pop_back();
+    T const &front();
+    T const &back();
     void insert(int, const T &);
     void erase(int);
-    T const &value_from_end(int) const;
+    T const &value_from_end(int);
     void reverse();
     void remove_value(const T &);
     void display();
     ~SingleLinkedList();
 };
 
-template <typename T>
-SingleLinkedList<T>::SingleLinkedList() : head(NULL) {}
+// Implementation
 
 template <typename T>
-T const &SingleLinkedList<T>::value_at(int index) const {
+SingleLinkedList<T>::SingleLinkedList() : head(NULL), size(0) {}
+
+template <typename T>
+T const &SingleLinkedList<T>::value_at(int index) {
     empty_check();
     bounds_check(index);
     Node<T> *current = head;
@@ -64,7 +66,7 @@ void SingleLinkedList<T>::push_front(const T &item) {
 }
 
 template <typename T>
-T &SingleLinkedList<T>::pop_front() {
+T SingleLinkedList<T>::pop_front() {
     empty_check();
     Node<T> *temp = head;
     T data = temp->data;
@@ -87,7 +89,7 @@ void SingleLinkedList<T>::push_back(const T &item) {
 }
 
 template <typename T>
-T &SingleLinkedList<T>::pop_back() {
+T SingleLinkedList<T>::pop_back() {
     empty_check();
     Node<T> *current = head;
     Node<T> *prev = NULL;
@@ -103,13 +105,13 @@ T &SingleLinkedList<T>::pop_back() {
 }
 
 template <typename T>
-const T &SingleLinkedList<T>::front() const {
+const T &SingleLinkedList<T>::front() {
     empty_check();
     return head->data;
 }
 
 template <typename T>
-T const &SingleLinkedList<T>::back() const {
+T const &SingleLinkedList<T>::back() {
     empty_check();
     Node<T> *current = head;
     while (current->next) current = current->next;
@@ -119,7 +121,6 @@ T const &SingleLinkedList<T>::back() const {
 template <typename T>
 void SingleLinkedList<T>::insert(int index, const T &item) {
     insert_check(index);
-    bounds_check(index);
     Node<T> *current = head;
     Node<T> *prev = NULL;
     int i = 0;
@@ -157,7 +158,7 @@ void SingleLinkedList<T>::erase(int index) {
 }
 
 template <typename T>
-T const &SingleLinkedList<T>::value_from_end(int position) const {
+T const &SingleLinkedList<T>::value_from_end(int position) {
     empty_check();
     int index = size - position;
     bounds_check(index);
@@ -186,21 +187,32 @@ void SingleLinkedList<T>::remove_value(const T &value) {
     empty_check();
     Node<T> *current = head;
     Node<T> *prev = NULL;
+    bool found = false;
     while (current) {
-        if (current->data == value) break;
+        if (current->data == value) {
+            found = true;
+            break;
+        }
         prev = current;
         current = current->next;
     }
-    if (!prev)
-        head = current->next;
-    else
-        prev->next = current->next;
-    delete[] current;
-    size--;
+    if (found) {
+        if (!prev)
+            head = current->next;
+        else
+            prev->next = current->next;
+        delete[] current;
+        size--;
+    } else
+        cout << value << " not found." << endl;
 }
 
 template <typename T>
 void SingleLinkedList<T>::display() {
+    if (is_empty()) {
+        cout << "List is empty." << endl;
+        return;
+    }
     Node<T> *current = head;
     while (current) {
         cout << current->data << ' ';
@@ -227,13 +239,56 @@ void SingleLinkedList<T>::bounds_check(int index) {
 
 template <typename T>
 void SingleLinkedList<T>::insert_check(int index) {
-    if (!size && index != 0) {
-        cout << "Error: Invalid index, should be 0." << endl;
-        exit(0);
-    }
+    if (!size) {
+        if (index != 0) {
+            cout << "Error: Invalid index, should be 0." << endl;
+            exit(0);
+        }
+    } else
+        bounds_check(index - 1);
 }
 
 template <typename T>
 SingleLinkedList<T>::~SingleLinkedList() {
     while (!is_empty()) pop_front();
+}
+
+// Driver Program
+int main() {
+    SingleLinkedList<int> L;
+    L.push_front(75);
+    L.pop_front();
+    L.insert(0, 75);
+    L.insert(1, 44);
+    cout << L.pop_back() << endl;
+    cout << L.pop_front() << endl;
+    L.display();
+    L.push_front(30);
+    cout << L.front() << endl;
+    cout << L.back() << endl;
+    L.remove_value(45);
+    L.remove_value(30);
+    L.display();
+    L.push_front(44);
+    L.push_front(75);
+    L.push_back(44);
+    L.display();
+    L.insert(1, 45);
+    L.display();
+    L.remove_value(45);
+    L.display();
+    L.erase(2);
+    L.display();
+    L.insert(1, 30);
+    L.push_back(44);
+    L.display();
+    cout << L.value_from_end(3) << endl;
+    cout << L.value_from_end(1) << endl;
+    cout << L.value_from_end(4) << endl;
+    L.reverse();
+    L.display();
+    cout << L.value_at(2) << endl;
+
+    getch();
+    return 0;
 }
