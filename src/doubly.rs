@@ -35,34 +35,62 @@ impl DoublyLinkedList {
             len: 0,
         }
     }
-    pub fn push_back(&self) {
-        unimplemented!();
-    }
-    pub fn push_front(&mut self, val: u64) {
-        let val = Node::new_ref(val).unwrap();
-        match self.head.take() {
-            Some(node) => {
-                println!("IN SOME");
-                val.borrow_mut().prev = None;
-                // node.borrow_mut().prev = Some(val.clone());
-                val.borrow_mut().next = Some(node);
-                self.head = Some(val);
-                // self.tail = Some(node);
+    pub fn push_back(&mut self, val: u64) {
+        let new_node = Node::new_ref(val).unwrap();
+        match self.tail.take() {
+            Some(old) => {
+                old.borrow_mut().next = Some(new_node.clone());
+                new_node.borrow_mut().prev = Some(old);
             }
-            None => {
-                val.borrow_mut().prev = None;
-                val.borrow_mut().next = None;
-                self.head = Some(val);
-                // self.tail = Some(val.clone());
-            }
+            None => self.head = Some(new_node.clone()),
         };
         self.inc_len();
+        self.tail = Some(new_node);
     }
-    pub fn pop_back(&self) -> u64 {
-        unimplemented!();
+    pub fn push_front(&mut self, val: u64) {
+        let new_node = Node::new_ref(val).unwrap();
+        match self.head.take() {
+            Some(old) => {
+                new_node.borrow_mut().next = Some(old.clone());
+                old.borrow_mut().prev = Some(new_node.clone());
+            }
+            None => self.tail = Some(new_node.clone()),
+        };
+        self.inc_len();
+        self.head = Some(new_node);
     }
-    pub fn pop_front(&self) -> u64 {
-        unimplemented!();
+    pub fn pop_back(&mut self) -> Option<u64> {
+        self.tail
+            .take()
+            .map(|tail| {
+                if let Some(last) = tail.borrow_mut().prev.take() {
+                    last.borrow_mut().next = None;
+                    self.tail = Some(last)
+                } else {
+                    self.head.take();
+                }
+                Rc::try_unwrap(tail).ok().expect("CANT UW").into_inner().val
+            })
+            .unwrap()
+    }
+    pub fn pop_front(&mut self) -> Option<u64> {
+        self.head
+            .take()
+            .map(|head| {
+                if let Some(next) = head.borrow_mut().next.take() {
+                    next.borrow_mut().prev = None;
+                    self.head = Some(next);
+                } else {
+                    self.tail.take();
+                }
+                self.dec_len();
+                Rc::try_unwrap(head)
+                    .ok()
+                    .expect("Something is terribly wrong")
+                    .into_inner()
+                    .val
+            })
+            .unwrap()
     }
     pub fn find() -> u64 {
         unimplemented!();
@@ -102,10 +130,13 @@ mod tests {
     fn test_insert() {
         use super::*;
         let mut dl = DoublyLinkedList::new();
-        println!("{:#?}", dl);
-        dl.push_front(4);
-        println!("{:#?}", dl);
+        dl.push_back(4);
+        dl.push_back(5);
         dl.push_front(3);
-        println!("{:#?}", dl);
+        dl.push_front(2);
+        assert_eq!(2, dl.pop_front().unwrap());
+        assert_eq!(3, dl.pop_front().unwrap());
+        assert_eq!(5, dl.pop_back().unwrap());
+        assert_eq!(4, dl.pop_back().unwrap());
     }
 }
