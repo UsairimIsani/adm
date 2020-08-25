@@ -125,21 +125,45 @@ impl<T: std::fmt::Debug + Clone> List<T> {
                 .val
         })
     }
+    // Try 4
     pub fn pop(&mut self) -> Option<T> {
         // Gives the last element but kills the List.
-        let mut prev = None;
-        let mut current = std::mem::replace(&mut self.head, None);
-        while let Some(node) = current {
-            prev = Some(node.borrow_mut().val.clone());
-            current = std::mem::replace(&mut node.borrow_mut().next, None);
-            self.dec_len();
-        }
-        self.tail.take();
-        prev
+        self.dec_len();
+        let head = std::mem::replace(&mut self.head, None); // Need More practise with this.
+        let mut pop = self.pop_r(head);
+        pop.take().map(|node| {
+            Rc::try_unwrap(node)
+                .ok()
+                .expect("Couldn't Unwrap RC")
+                .into_inner()
+                .val
+        })
     }
+    fn pop_r(&mut self, node: Link<T>) -> Link<T> {
+        match node {
+            Some(n) => match &n.borrow().next {
+                Some(m) => self.pop_r(Some(m.clone())),
+                None => Some(n.clone()),
+            },
+            None => node,
+        }
+    }
+    // pub fn pop(&mut self) -> Option<T> {
+    //     // Gives the last element but kills the List.
+    //     let mut prev = None;
+    //     let mut current = std::mem::replace(&mut self.head, None);
+    //     while let Some(node) = current {
+    //         prev = Some(node.borrow_mut().val.clone());
+    //         current = std::mem::replace(&mut node.borrow_mut().next, None);
+    //         self.dec_len();
+    //     }
+    //     self.tail.take();
+    //     prev
+    // }
     pub fn length(&self) -> u64 {
         self.len
     }
+
     // Try 1
 
     // pub fn pop(&mut self) -> Option<T> {

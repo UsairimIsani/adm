@@ -52,17 +52,17 @@ fn create_string_r(key: &String, map: &HashMap<String, String>) -> String {
 }
 #[cfg(test)]
 mod tests {
-    use proptest::prelude::*;
-    proptest! {
-        #[test]
-        fn test_create_string_proptest(s in prop::collection::hash_set("[A-Z]",1..=20), v in prop::collection::hash_set("[A-Z]",1..=20))  {
-            prop_assume!(s != v);
-            use crate::toptal_word::create_string;
-            let st = s.iter().zip(v.iter()).filter(|(x,y)|x!=y).map(|(x,y)|format!("{}>{}",x,y)).collect();
-            println!("{:#?}",st);
-            println!("{:#?}", create_string(st));
-        }
-    }
+    // use proptest::prelude::*;
+    // proptest! {
+    //     #[test]
+    //     fn test_create_string_proptest(s in prop::collection::hash_set("[A-Z]",1..=20), v in prop::collection::hash_set("[A-Z]",1..=20))  {
+    //         prop_assume!(s != v);
+    //         use crate::toptal_word::create_string;
+    //         let st = s.iter().zip(v.iter()).filter(|(x,y)|x!=y).map(|(x,y)|format!("{}>{}",x,y)).collect();
+    //         println!("{:#?}",st);
+    //         println!("{:#?}", create_string(st));
+    //     }
+    // }
     #[test]
     fn test_create_string() {
         use crate::toptal_word::create_string;
