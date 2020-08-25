@@ -92,9 +92,28 @@ impl DoublyLinkedList {
             })
             .unwrap()
     }
-    pub fn find() -> u64 {
-        unimplemented!();
-    }
+    // pub fn find(&mut self, val: u64) -> bool {
+    //     let mut prev = self.head.clone();
+    //     let mut result = false;
+
+    //     while more {
+    //         if prev.unwrap().borrow().val.unwrap() == val {
+    //             result = true;
+    //         } else {
+    //             prev = prev.clone().unwrap().borrow_mut().next.take();
+    //         }
+    //     }
+    //     result
+    // }
+    // fn find_r(&self, node: Link, val: u64) -> &Link {
+    //     node.take().map(|mut head| {
+    //         if head.borrow().val.unwrap() == val {
+    //             head
+    //         } else {
+    //             self.find_r(head.borrow_mut().next, val).unwrap()
+    //         }
+    //     })
+    // }
     pub fn len(&mut self) -> u64 {
         self.len
     }
@@ -134,6 +153,7 @@ mod tests {
         dl.push_back(5);
         dl.push_front(3);
         dl.push_front(2);
+        // assert_eq!(true, dl.find(2));
         assert_eq!(2, dl.pop_front().unwrap());
         assert_eq!(3, dl.pop_front().unwrap());
         assert_eq!(5, dl.pop_back().unwrap());
