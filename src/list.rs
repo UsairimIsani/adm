@@ -54,7 +54,7 @@
 //     }
 // }
 
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
 type Link<T: Clone> = Option<Rc<RefCell<Node<T>>>>;
@@ -79,7 +79,7 @@ pub struct List<T: Clone> {
     len: u64,
 }
 
-impl<T: std::fmt::Debug + Clone> List<T> {
+impl<T: std::fmt::Debug + Clone + PartialEq + PartialOrd + Copy> List<T> {
     pub fn new() -> Self {
         Self {
             head: None,
@@ -125,29 +125,45 @@ impl<T: std::fmt::Debug + Clone> List<T> {
                 .val
         })
     }
+    // pub fn pop(&mut self, val: T) -> Option<Ref<Node<T>>> {
+    //     match &self.head {
+    //         Some(node) => self.pop_r(node.borrow(), val),
+    //         None => None,
+    //     }
+    // }
+    // fn pop_r<'a>(&self, node: Ref<'a, Node<T>>, val: T) -> Option<Ref<'a, Node<T>>> {
+    //     if node.val == val {
+    //         Some(node)
+    //     } else {
+    //         match &node.next {
+    //             Some(next) => self.pop_r(next.borrow(), val),
+    //             None => None,
+    //         }
+    //     }
+    // }
     // Try 4
-    pub fn pop(&mut self) -> Option<T> {
-        // Gives the last element but kills the List.
-        self.dec_len();
-        let head = std::mem::replace(&mut self.head, None); // Need More practise with this.
-        let mut pop = self.pop_r(head);
-        pop.take().map(|node| {
-            Rc::try_unwrap(node)
-                .ok()
-                .expect("Couldn't Unwrap RC")
-                .into_inner()
-                .val
-        })
-    }
-    fn pop_r(&mut self, node: Link<T>) -> Link<T> {
-        match node {
-            Some(n) => match &n.borrow().next {
-                Some(m) => self.pop_r(Some(m.clone())),
-                None => Some(n.clone()),
-            },
-            None => node,
-        }
-    }
+    // pub fn pop(&mut self) -> Option<T> {
+    //     // Gives the last element but kills the List.
+    //     self.dec_len();
+    //     let head = std::mem::replace(&mut self.head, None); // Need More practise with this.
+    //     let mut pop = self.pop_r(head);
+    //     pop.take().map(|node| {
+    //         Rc::try_unwrap(node)
+    //             .ok()
+    //             .expect("Couldn't Unwrap RC")
+    //             .into_inner()
+    //             .val
+    //     })
+    // }
+    // fn pop_r(&mut self, node: Link<T>) -> Link<T> {
+    //     match node {
+    //         Some(n) => match &n.borrow().next {
+    //             Some(m) => self.pop_r(Some(m.clone())),
+    //             None => Some(n.clone()),
+    //         },
+    //         None => node,
+    //     }
+    // }
     // pub fn pop(&mut self) -> Option<T> {
     //     // Gives the last element but kills the List.
     //     let mut prev = None;
