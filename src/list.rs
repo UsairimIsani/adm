@@ -57,7 +57,7 @@
 use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
-type Link<T: Clone> = Option<Rc<RefCell<Node<T>>>>;
+type Link<T> = Option<Rc<RefCell<Node<T>>>>;
 
 #[derive(Debug)]
 pub struct Node<T: Clone> {
@@ -68,6 +68,9 @@ pub struct Node<T: Clone> {
 impl<T: std::fmt::Debug + Clone> Node<T> {
     pub fn new(val: T) -> Rc<RefCell<Self>> {
         Rc::new(RefCell::new(Self { val, next: None }))
+    }
+    pub fn new_n(val: T) -> Self {
+        Self { val, next: None }
     }
 }
 
@@ -104,10 +107,10 @@ impl<T: std::fmt::Debug + Clone + PartialEq + PartialOrd + Copy> List<T> {
         self.inc_len();
         self.head = Some(new_node);
     }
-    pub fn inc_len(&mut self) {
+    fn inc_len(&mut self) {
         self.len += 1;
     }
-    pub fn dec_len(&mut self) {
+    fn dec_len(&mut self) {
         self.len -= 1;
     }
     pub fn shift(&mut self) -> Option<T> {
@@ -125,123 +128,21 @@ impl<T: std::fmt::Debug + Clone + PartialEq + PartialOrd + Copy> List<T> {
                 .val
         })
     }
-    // pub fn pop(&mut self, val: T) -> Option<Ref<Node<T>>> {
-    //     match &self.head {
-    //         Some(node) => self.pop_r(node.borrow(), val),
-    //         None => None,
-    //     }
-    // }
-    // fn pop_r<'a>(&self, node: Ref<'a, Node<T>>, val: T) -> Option<Ref<'a, Node<T>>> {
-    //     if node.val == val {
-    //         Some(node)
-    //     } else {
-    //         match &node.next {
-    //             Some(next) => self.pop_r(next.borrow(), val),
-    //             None => None,
-    //         }
-    //     }
-    // }
-    // Try 4
-    // pub fn pop(&mut self) -> Option<T> {
-    //     // Gives the last element but kills the List.
-    //     self.dec_len();
-    //     let head = std::mem::replace(&mut self.head, None); // Need More practise with this.
-    //     let mut pop = self.pop_r(head);
-    //     pop.take().map(|node| {
-    //         Rc::try_unwrap(node)
-    //             .ok()
-    //             .expect("Couldn't Unwrap RC")
-    //             .into_inner()
-    //             .val
-    //     })
-    // }
-    // fn pop_r(&mut self, node: Link<T>) -> Link<T> {
-    //     match node {
-    //         Some(n) => match &n.borrow().next {
-    //             Some(m) => self.pop_r(Some(m.clone())),
-    //             None => Some(n.clone()),
-    //         },
-    //         None => node,
-    //     }
-    // }
-    // pub fn pop(&mut self) -> Option<T> {
-    //     // Gives the last element but kills the List.
-    //     let mut prev = None;
-    //     let mut current = std::mem::replace(&mut self.head, None);
-    //     while let Some(node) = current {
-    //         prev = Some(node.borrow_mut().val.clone());
-    //         current = std::mem::replace(&mut node.borrow_mut().next, None);
-    //         self.dec_len();
-    //     }
-    //     self.tail.take();
-    //     prev
-    // }
+    pub fn pop(&mut self) -> Option<T> {
+        match &self.head {
+            Some(node) => self.pop_r(node.borrow()),
+            None => None,
+        }
+    }
+    fn pop_r(&self, node: Ref<Node<T>>) -> Option<T> {
+        match &node.next {
+            Some(next) => self.pop_r(next.borrow()),
+            None => Some(node.val),
+        }
+    }
     pub fn length(&self) -> u64 {
         self.len
     }
-
-    // Try 1
-
-    // pub fn pop(&mut self) -> Option<T> {
-    //     self.head.take().map(|head| {
-    //         if let Some(next) = head.borrow_mut().next.take() {
-    //             next.pop_r()
-    //         } else {
-    //             None
-    //         }
-    //     })
-    // }
-    // fn pop_r(&mut self, node: Rc<RefCell<Node<T>>>) -> Option<T> {
-    //     node.take().map(|node_val|{
-    //         if let Some(next) = node.borrow_mut().take() {
-    //             next.pop_r()
-    //         }else{
-    //             Rc::try_unwrap(node).ok().expect("Phati win")
-    //         }
-    //     })
-    // }
-
-    // Try 2
-    // pub fn pop(&mut self) -> Option<T> {
-    //     let mut prev = None;
-    //     let mut current = self.head.take();
-    //     while let Some(node) = current {
-    //         prev = Some(
-    //             Rc::try_unwrap(node)
-    //                 .ok()
-    //                 .expect("GETTING INSIDE")
-    //                 .into_inner(),
-    //         );
-    //         current = Some(Rc::new(RefCell::new(prev.unwrap()));
-    //     }
-    //     prev.map(|n| n.val)
-    //     // Some(
-    //     //     Rc::try_unwrap(prev.unwrap())
-    //     //         .ok()
-    //     //         .expect("h")
-    //     //         .into_inner()
-    //     //         .val,
-    //     // )
-    // }
-    // Try 3
-    // pub fn pop(&mut self) -> Option<T> {
-    //     // let mut prev = None;
-    //     let mut current = std::mem::replace(&mut self.head, None);
-    //     while let Some(node) = current {
-    //         // prev = Some(node);
-    //         // prev = std::mem::replace(&mut , None);
-    //         current = std::mem::replace(&mut node.borrow_mut().next, None);
-    //     }
-    //     // prev
-    //     Some(
-    //         Rc::try_unwrap(current.unwrap())
-    //             .ok()
-    //             .expect("h")
-    //             .into_inner()
-    //             .val,
-    //     )
-    //     // Some(current)
-    // }
 }
 
 #[cfg(test)]
@@ -258,7 +159,7 @@ mod tests {
         println!("{:#?}", li);
         println!("{}", li.shift().unwrap());
         println!("{}", li.shift().unwrap());
-        println!("{}", li.pop().unwrap());
+        println!("{:?}", li.pop());
         println!("{:#?}", li);
     }
 }
