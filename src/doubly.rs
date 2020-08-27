@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 type Link = Option<Rc<RefCell<Node>>>;
 #[derive(Debug)]
@@ -92,28 +92,31 @@ impl DoublyLinkedList {
             })
             .unwrap()
     }
-    // pub fn find(&mut self, val: u64) -> bool {
-    //     let mut prev = self.head.clone();
-    //     let mut result = false;
-
-    //     while more {
-    //         if prev.unwrap().borrow().val.unwrap() == val {
-    //             result = true;
-    //         } else {
-    //             prev = prev.clone().unwrap().borrow_mut().next.take();
-    //         }
-    //     }
-    //     result
-    // }
-    // fn find_r(&self, node: Link, val: u64) -> &Link {
-    //     node.take().map(|mut head| {
-    //         if head.borrow().val.unwrap() == val {
-    //             head
-    //         } else {
-    //             self.find_r(head.borrow_mut().next, val).unwrap()
-    //         }
-    //     })
-    // }
+    pub fn find(&mut self, val: u64) -> bool {
+        self.head
+            .take()
+            .map(|head| {
+                let next = head.borrow_mut().next.take().unwrap();
+                if next.borrow().val.unwrap() == val {
+                    true
+                } else {
+                    self.find_r(next.borrow(), val)
+                }
+            })
+            .unwrap()
+    }
+    fn find_r(&self, node: Ref<Node>, val: u64) -> bool {
+        if node.val.is_some() && node.val.unwrap() == val {
+            true
+        } else if node.val.is_none() {
+            false
+        } else {
+            match &node.next {
+                Some(next) => self.find_r(next.borrow(), val),
+                None => false,
+            }
+        }
+    }
     pub fn len(&mut self) -> u64 {
         self.len
     }
@@ -153,10 +156,10 @@ mod tests {
         dl.push_back(5);
         dl.push_front(3);
         dl.push_front(2);
-        // assert_eq!(true, dl.find(2));
-        assert_eq!(2, dl.pop_front().unwrap());
-        assert_eq!(3, dl.pop_front().unwrap());
-        assert_eq!(5, dl.pop_back().unwrap());
-        assert_eq!(4, dl.pop_back().unwrap());
+        assert_eq!(true, dl.find(4));
+        // assert_eq!(2, dl.pop_front().unwrap());
+        // assert_eq!(3, dl.pop_front().unwrap());
+        // assert_eq!(5, dl.pop_back().unwrap());
+        // assert_eq!(4, dl.pop_back().unwrap());
     }
 }
