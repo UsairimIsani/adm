@@ -93,17 +93,10 @@ impl DoublyLinkedList {
             .unwrap()
     }
     pub fn find(&mut self, val: u64) -> bool {
-        self.head
-            .take()
-            .map(|head| {
-                let next = head.borrow_mut().next.take().unwrap();
-                if next.borrow().val.unwrap() == val {
-                    true
-                } else {
-                    self.find_r(next.borrow(), val)
-                }
-            })
-            .unwrap()
+        match &self.head {
+            Some(node) => self.find_r(node.borrow(), val),
+            None => false,
+        }
     }
     fn find_r(&self, node: Ref<Node>, val: u64) -> bool {
         if node.val.is_some() && node.val.unwrap() == val {
