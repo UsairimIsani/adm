@@ -110,6 +110,14 @@ impl DoublyLinkedList {
             }
         }
     }
+    pub fn iterate(&mut self, cal: &dyn Fn(Option<u64>) -> ()) {
+        let mut list = vec![];
+        while let Some(n) = self.head.take() {
+            self.head = n.borrow_mut().next.take();
+            list.push(n);
+        }
+        list.iter().for_each(|no| cal(no.borrow().val));
+    }
     pub fn len(&mut self) -> u64 {
         self.len
     }
@@ -149,7 +157,10 @@ mod tests {
         dl.push_back(5);
         dl.push_front(3);
         dl.push_front(2);
-        assert_eq!(true, dl.find(4));
+        // assert_eq!(true, dl.find(4));
+        dl.iterate(&|x| {
+            println!("{:?}", x);
+        });
         // assert_eq!(2, dl.pop_front().unwrap());
         // assert_eq!(3, dl.pop_front().unwrap());
         // assert_eq!(5, dl.pop_back().unwrap());

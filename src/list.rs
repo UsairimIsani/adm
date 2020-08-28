@@ -140,6 +140,28 @@ impl<T: std::fmt::Debug + Clone + PartialEq + PartialOrd + Copy> List<T> {
             None => Some(node.val),
         }
     }
+    pub fn pop_new(&mut self) -> Option<T> {
+        let mut list = vec![];
+        while let Some(n) = self.head.take() {
+            self.head = n.borrow_mut().next.take();
+            list.push(n);
+        }
+        let mut pop = list.pop();
+        let mut new_list = List::new();
+        list.iter()
+            .rev()
+            .for_each(|no| new_list.append(no.borrow_mut().val));
+        self.head = new_list.head;
+        self.len = new_list.len;
+        self.tail = new_list.tail;
+        pop.take().map(|node| {
+            Rc::try_unwrap(node)
+                .ok()
+                .expect("msg: &str")
+                .into_inner()
+                .val
+        })
+    }
     pub fn length(&self) -> u64 {
         self.len
     }
