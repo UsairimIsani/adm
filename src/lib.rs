@@ -18,6 +18,7 @@ pub mod find_max_consecutive_ones;
 pub mod find_numbers;
 pub mod list;
 pub mod quicksort;
+pub mod running_sum;
 pub mod single_num;
 pub mod sorted_squares;
 pub mod toptal_word;
