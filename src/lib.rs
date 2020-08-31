@@ -20,6 +20,7 @@ pub mod kid_with_candies;
 pub mod list;
 pub mod quicksort;
 pub mod running_sum;
+pub mod shuffle;
 pub mod single_num;
 pub mod sorted_squares;
 pub mod toptal_word;
