@@ -16,6 +16,7 @@ template <typename T>
 class SingleLinkedList {
    private:
     Node<T> *head;
+    Node<T> *tail;
     int size;
     void empty_check();
     void bounds_check(int);
@@ -44,7 +45,7 @@ class SingleLinkedList {
 // Implementation
 
 template <typename T>
-SingleLinkedList<T>::SingleLinkedList() : head(NULL), size(0) {}
+SingleLinkedList<T>::SingleLinkedList() : head(NULL), tail(NULL), size(0) {}
 
 template <typename T>
 T const &SingleLinkedList<T>::value_at(int index) {
@@ -61,6 +62,7 @@ void SingleLinkedList<T>::push_front(const T &item) {
     Node<T> *new_node = new Node<T>;
     new_node->data = item;
     new_node->next = head;
+    if (!tail) tail = new_node;
     head = new_node;
     size++;
 }
@@ -71,6 +73,7 @@ T SingleLinkedList<T>::pop_front() {
     Node<T> *temp = head;
     T data = temp->data;
     head = head->next;
+    if (!head) tail = head;
     delete[] temp;
     size--;
     return data;
@@ -78,13 +81,14 @@ T SingleLinkedList<T>::pop_front() {
 
 template <typename T>
 void SingleLinkedList<T>::push_back(const T &item) {
-    if (!head) return push_front(item);
-    Node<T> *current = head;
-    while (current->next) current = current->next;
     Node<T> *new_node = new Node<T>;
     new_node->data = item;
-    new_node->next = current->next;
-    current->next = new_node;
+    new_node->next = NULL;
+    if (tail)
+        tail->next = new_node;
+    else
+        head = new_node;
+    tail = new_node;
     size++;
 }
 
@@ -99,9 +103,11 @@ T SingleLinkedList<T>::pop_back() {
     }
     T data = current->data;
     if (!prev)
-        head = NULL;
-    else
+        head = tail = NULL;
+    else {
         prev->next = current->next;
+        tail = prev;
+    }
     delete[] current;
     size--;
     return data;
@@ -116,9 +122,7 @@ const T &SingleLinkedList<T>::front() {
 template <typename T>
 T const &SingleLinkedList<T>::back() {
     empty_check();
-    Node<T> *current = head;
-    while (current->next) current = current->next;
-    return current->data;
+    return tail->data;
 }
 
 template <typename T>
@@ -134,9 +138,10 @@ void SingleLinkedList<T>::insert(int index, const T &item) {
     Node<T> *new_node = new Node<T>;
     new_node->data = item;
     new_node->next = current;
-    if (!prev && !index)
+    if (!prev && !index) {
         head = new_node;
-    else
+        tail = new_node;
+    } else
         prev->next = new_node;
     size++;
 }
@@ -145,6 +150,7 @@ template <typename T>
 void SingleLinkedList<T>::erase(int index) {
     empty_check();
     bounds_check(index);
+
     Node<T> *current = head;
     Node<T> *prev = NULL;
     int i = 0;
@@ -156,6 +162,8 @@ void SingleLinkedList<T>::erase(int index) {
         head = current->next;
     else
         prev->next = current->next;
+    if (!head) tail = head;
+    if (index == size - 1) tail = prev;
     delete[] current;
     size--;
 }
@@ -176,6 +184,7 @@ void SingleLinkedList<T>::reverse() {
     Node<T> *current = head;
     Node<T> *prev = NULL;
     Node<T> *next = NULL;
+    tail = head;
     while (current) {
         next = current->next;
         current->next = prev;
@@ -204,6 +213,8 @@ void SingleLinkedList<T>::remove_value(const T &value) {
             head = current->next;
         else
             prev->next = current->next;
+        if (!head) tail = head;
+        if (tail == current) tail = prev;
         delete[] current;
         size--;
     } else
@@ -283,6 +294,7 @@ int main() {
     L.erase(2);
     L.display();
     L.insert(1, 30);
+    L.display();
     L.push_back(44);
     L.display();
     cout << L.value_from_end(3) << endl;
