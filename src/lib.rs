@@ -16,6 +16,7 @@ pub mod doubly;
 pub mod duplicate_zeroes;
 pub mod find_max_consecutive_ones;
 pub mod find_numbers;
+pub mod integer_reversel;
 pub mod kid_with_candies;
 pub mod list;
 pub mod quicksort;
