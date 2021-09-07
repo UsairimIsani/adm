@@ -2,7 +2,6 @@
 
 Adm - Rust Database for storing practice questions from leetcode I've attempted or completed.
 
+How to do some small algorithm practice.
 
-
-
-[@Usaririm](https://github.com/UsairimIsani)
+[@UsaririmIsani](https://github.com/UsairimIsani)
